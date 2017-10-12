@@ -1,0 +1,24 @@
+{
+  "name": "lab6",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Qianzhu11/CS_546.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Qianzhu11/CS_546/issues"
+  },
+  "homepage": "https://github.com/Qianzhu11/CS_546#readme",
+  "dependencies": {
+    "express": "^4.16.2",
+    "mongodb": "^2.2.31",
+    "uuid": "^3.1.0"
+  }
+}
