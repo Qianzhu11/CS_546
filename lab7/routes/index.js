@@ -6,7 +6,7 @@ const constructorMethod = (app) => {
     app.use("/comments", commentRoutes);
 
     app.use("*", (req, res) => {
-        res.Status(404).json({error: "Not found"});
+        res.sendStatus(404);
     });
 };
 
