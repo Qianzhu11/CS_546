@@ -1,7 +1,7 @@
 const mongoCollections = require("../config/mongoCollections");
 const recipes = mongoCollections.recipes;
 const comments = require("./comments");
-const uuid = require("node-uuid");
+const uuid = require('uuid');
 
 const exportedMethods = {
     async getAllRecipes() {

@@ -1,7 +1,7 @@
 const mongoCollections = require("../config/mongoCollections");
 const comments = mongoCollections.comments;
 const recipes = require("./recipes");
-const uuid = require('node-uuid');
+const uuid = require('uuid');
 
 let exportedMethods = {
 
@@ -19,8 +19,8 @@ let exportedMethods = {
     async getCommentByCommentId(id) {
         const commentCollection = await comments();
         const allRecipes = await recipes.getAllRecipes();
-        const theRecipe;
-        const theComment;
+        let theRecipe = 0;
+        let theComment = 0;
         for (let i = 0; i < allRecipes.length; i++) {
             for (let j = 0; j < allRecipes[i].comments.length; j++) {
                 if (allRecipes[i].comments[j]._id === id) {

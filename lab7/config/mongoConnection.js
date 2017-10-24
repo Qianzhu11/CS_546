@@ -6,7 +6,7 @@ const settings = {
     }
 };
 
-let fullMongoUrl = `${mongoConfig.serverUrl}${mongoConfig.database}`;
+let fullMongoUrl = settings.mongoConfig.serverUrl + settings.mongoConfig.database;
 let _connection = undefined;
 
 module.exports = async () => {
