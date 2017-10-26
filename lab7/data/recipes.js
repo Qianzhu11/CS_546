@@ -7,9 +7,13 @@ const exportedMethods = {
     async getAllRecipes() {
         const recipeCollection = await recipes();
         const allRecipes = await recipeCollection.find({}).toArray();
-        const recipeArray = new Array[allRecipes.length];
+        let recipeArray = [];
         for (let i = 0; i < allRecipes.length; i++) {
-            recipeArray[i] = {_id: allRecipes[i]._id, title: allRecipes[i].title};
+            let content = {
+                _id: allRecipes[i]._id,
+                title: allRecipes[i].title
+            }
+            recipeArray.push(content);
         }
         return recipeArray;
     },
@@ -22,13 +26,13 @@ const exportedMethods = {
         return recipe;
     },
 
-    async addRecipe(id, title, ingredient, steps, comments) {
+    async addRecipe(title, ingredient, steps, comments) {
         if (typeof title !== "string") throw "No title provided";
         
         const recipeCollection = await recipes();
         
         const newRecipe = {
-            _id: uuid.v4,
+            _id: uuid.v4(),
             title: title,
             ingredient: ingredient,
             steps: steps,

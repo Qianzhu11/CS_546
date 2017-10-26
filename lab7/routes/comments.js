@@ -3,7 +3,7 @@ const router = express.Router();
 const data = require("../data");
 const commentData = data.comments;
 
-router.get("/comments/recipe/:recipeId", async (req, res) => {
+router.get("/recipe/:recipeId", async (req, res) => {
     try {
         const comment = await commentData.getCommentByRecipeId(req.params.id);
         res.json(comment);
@@ -12,7 +12,7 @@ router.get("/comments/recipe/:recipeId", async (req, res) => {
     }
 });
 
-router.get("/comments/:commentId", async (req,res) => {
+router.get("/:commentId", async (req,res) => {
     try {
         const comment = await commentData.getCommentByCommentId(req.params.id);
         res.json(comment);
@@ -21,7 +21,7 @@ router.get("/comments/:commentId", async (req,res) => {
     }
 });
 
-router.post("comments/:recipeId", async (req, res) => {
+router.post("/:recipeId", async (req, res) => {
     const commentInfo = req.body;
 
     if (!commentInfo) {
@@ -51,7 +51,7 @@ router.post("comments/:recipeId", async (req, res) => {
     }
 });
 
-router.put("comments/:recipeId/:commentId", async (req, res) => {
+router.put("/:recipeId/:commentId", async (req, res) => {
     const commentInfo = req.body;
 
     if (!commentInfo) {
@@ -84,7 +84,7 @@ router.put("comments/:recipeId/:commentId", async (req, res) => {
     }
 });
 
-router.delete("comments/:id", async (req, res) => {
+router.delete("/:id", async (req, res) => {
     try {
         await commentData.getCommentByCommentId(req.params.id);
     } catch (e) {

@@ -7,12 +7,13 @@ let exportedMethods = {
 
     async getCommentByRecipeId(id) {
         const recipe = await recipes.getRecipeById(id);
-        const allComments = new Array[recipe.comments.length];
-        for (let i = 0; i < recipe.comments.length; i++) {
-            commentArray[i] = {_id: recipe.comments[i]._id, recipeId: recipe._id, recipeTitle: recipe.title, poster: recipe.poster, comment: recipe[i].comments.comment};
+        const comments = recipe.comments;
+        let allComments = [];
+        for (let i = 0; i < comments.length; i++) {
+            allComments.push({_id: comments[i]._id, recipeId: recipe._id, recipeTitle: recipe.title, poster: comments[i].poster, comment: comments[i].comment});
         }
 
-        if (!comment) throw "Comment not found";
+        if (!allComments) throw "Comment not found";
         return allComments;
     },
 
