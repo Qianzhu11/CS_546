@@ -5,7 +5,7 @@ const commentData = data.comments;
 
 router.get("/recipe/:recipeId", async (req, res) => {
     try {
-        const comment = await commentData.getCommentByRecipeId(req.params.id);
+        const comment = await commentData.getCommentByRecipeId(req.params.recipeId);
         res.json(comment);
     } catch (e) {
         res.status(404).json({error: "Comment not found"});
@@ -14,73 +14,63 @@ router.get("/recipe/:recipeId", async (req, res) => {
 
 router.get("/:commentId", async (req,res) => {
     try {
-        const comment = await commentData.getCommentByCommentId(req.params.id);
+        const comment = await commentData.getCommentByCommentId(req.params.commentId);
         res.json(comment);
     } catch (e) {
         res.status(404).json({error: "Comment not found"});
     }
 });
 
-router.post("/:recipeId", async (req, res) => {
-    const commentInfo = req.body;
-
+router.post("/:recipeId", async (req,res)=>{
+    let commentInfo = req.body;
     if (!commentInfo) {
-        res.status(400).json({error: "You must provide data to create a comment"});
+        res.status(400).json({error: "You must provide data to create a comment."});
         return;
     }
-
     if (!commentInfo.poster) {
-        res.status(400).json({error: "You must provide a poster"});
+        res.status(400).json({error: "You must provide a poster."});
         return;
     }
-
     if (!commentInfo.comment) {
-        res.status(400).json({error: "You must provide a comment"});
+        res.status(400).json({error: "You must provide comment."});
         return;
     }
-
     try {
-        const newComment = await commentData.addComment(
-            commentInfo.id,
-            commentInfo.poster,
-            commentInfo.comment
-        );
-        res.json(newComment);
+        const result = await commentsData.addComment(req.params.recipeId, commentInfo.poster, commentInfo.comment);
+        res.json(result);
     } catch (e) {
-        res.sendStatus(500);
+        console.log(e);
+        res.status(500).json({error: e});
     }
 });
 
-router.put("/:recipeId/:commentId", async (req, res) => {
-    const commentInfo = req.body;
 
+router.put("/:recipeId/:commentId", async (req,res)=>{
+    let commentInfo = req.body;
     if (!commentInfo) {
-        res.status(400).json({error: "You must provide data to update a comment"});
+        res.status(400).json({error: "You must provide data to update a comment."});
         return;
     }
-
-    if (!commentInfo.poster) {
-        res.status(400).json({error: "You must provide a poster"});
+    if (!req.params.recipeId) {
+        res.status(400).json({error: "You must provide a recipeId."});
         return;
     }
-
-    if (!commentInfo.comment) {
-        res.status(400).json({error: "You must provide a comment"});
+    if (!req.params.commentId) {
+        res.status(400).json({error: "You must provide a commentId."});
         return;
     }
-
-    try {
-        await commentData.getCommentByCommentId(req.params.id);
-    } catch (e) {
-        res.status(404).json({error: "Comment not found"});
-        return;
-    }
-
-    try {
-        const updatedComment = await commentData.updateComment(req.params.id, commentInfo);
-        res.json(updatedComment);
-    } catch (e) {
-        res.sendStatus(500);
+    try{
+        const getData = await commentsData.getCommentByCommentId(req.params.commentId);
+        try {
+            const result = await commentsData.updateComment(req.params.recipeId,req.params.commentId,commentInfo);
+            res.json(result);
+        } catch(e) {
+            console.log(e);
+            res.status(500).json({error: e});
+        }
+    } catch(e) {
+        console.log(e);
+        res.status(404).json({error: "Comment not found."});
     }
 });
 

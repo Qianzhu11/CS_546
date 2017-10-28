@@ -1,10 +1,10 @@
 const mongoCollections = require("../config/mongoCollections");
-const comments = mongoCollections.comments;
+const recipeC = mongoCollections.recipes;
 const recipes = require("./recipes");
 const uuid = require('uuid');
 
 let exportedMethods = {
-
+    
     async getCommentByRecipeId(id) {
         const recipe = await recipes.getRecipeById(id);
         const comments = recipe.comments;
@@ -18,7 +18,6 @@ let exportedMethods = {
     },
 
     async getCommentByCommentId(id) {
-        const commentCollection = await comments();
         const allRecipes = await recipes.getAllRecipes();
         let theRecipe = 0;
         let theComment = 0;
@@ -35,50 +34,60 @@ let exportedMethods = {
         return comment;
     },
 
-    async addComment(id, poster, comment) {
-        const commentCollection = await comments();
-
-        const newComment = {
+    async addComment(recipeId, poster, comment) {
+        const recipeCollection = await recipeC();
+        const theRecipe = await recipeCollection.findOne({_id: recipeId});
+        
+        const theComment = {
             _id: uuid.v4,
             poster: poster,
             comment: comment
         };
 
-        const newInsertInformation = await commentCollection.insertOne(newComment);
-        const newId = newInsertInformation.insertedId;
-        return await this.getCommentByCommentId(newId);
+        let newComment = {
+            $push: {comments: theComment}
+        };
+
+        if(!comment) throw "You must provide a comment";
+
+        await recipeCollection.updateOne({_id: recipeId}, newComment);
+        return theComment;
     },
 
-    async updateComment(id, updatedComment) {
-        const commentCollection = await comments();
+    async updateComment(recipeId, commentId, updatedComment) {
+        const recipeCollection = await recipeC();
+        const theRecipe = await recipeCollection.findOne({_id: recipeId});
 
         const updatedCommentData = {};
 
         if (updatedComment.poster) {
-            updatedCommentData.poster = updatedComment.poster;
+            recipeCollection.update({'comments._id': commentId}, {$set: {'comments.$.poster': updatedComment.poster}});
         }
 
         if (updatedComment.comment) {
-            updatedCommentData.comment = updatedComment.comment;
+            recipeCollection.update({'comments._id': commentId}, {$set: {'comments.$comment': updatedComment.comment}});
         }
-
-        let updateCommand = {
-            $set: updatedCommentData
-        };
-
-        const query = {
-            _id: id
-        };
-
-        await commentCollection.updateOne(query, updateCommand);
+        return await this.getCommentByCommentId(commentId);
     },
 
     async removeComment(id) {
-        const commentCollection = await comments();
-        const deletionInfo = await commentCollection.removeOne({_id: id});
-
-        if(deletionInfo.deletedCount === 0) {
-            throw `Could not delete comment with id of ${id}`;
+        if (!id) throw "You must provide an id";
+        
+        const recipeCollection = await recipeC();
+        const allRecipes = recipes.getAllRecipes();
+        for (let i = 0; i < allRecipes.length; i++) {
+            const allComments = await this.getCommentByRecipeId(allRecipes[i]._id);
+            for (let j = 0; j < allComments.length; j++) {
+                if (allComments[j]._id === id) {
+                    let commentDeletion = await recipeCollection.update(
+                        {_id: allRecipes[i]._id},
+                        {$pull: {'comments': {_id: id}}}
+                    )
+                }
+            }
         }
+        return "{delete comment: true}";
     },
 }
+
+module.exports = exportedMethods;
