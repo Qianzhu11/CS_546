@@ -1,10 +1,10 @@
-const palindromeRoutes = require("./palindrome");
+const palindromeRoutes = require("./palindromes");
 
 const constructorMethod = app => {
-    app.use("/palindrome", palindromeRoutes);
+    app.use("/", palindromeRoutes);
 
     app.use("*", (req, res) => {
-        res.redirect("/palindrome/static");
+        res.status(404).json({error: "Route Not Found"});
     })
 };
 
