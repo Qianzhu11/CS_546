@@ -1,4 +1,4 @@
-const palindromeRoutes = require("./palindromes");
+const palindromeRoutes = require("./palindrome");
 
 const constructorMethod = app => {
     app.use("/", palindromeRoutes);
