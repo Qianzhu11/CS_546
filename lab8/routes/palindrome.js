@@ -10,3 +10,5 @@ router.get("/static", (req, res) => {
 router.get("/server", (req, res) => {
     res.render("palindrome/server", {});
 });
+
+module.exports = router;
