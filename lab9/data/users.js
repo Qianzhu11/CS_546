@@ -8,10 +8,14 @@ const users = [
 ];
 
 let exportedMethods = {
-    async ifUserMathchs(username, password) {
+    async getUser(username, password) {
         if (username === undefined || password === undefined) throw "Invalid username or password";
         for (let i = 0; i < users.length; i++) {
-            
+            if (username = users[i].username && await bcrypt.compare(password, users[i].hashedPassword));
+            return users[i];
         }
+        throw "Invalid username or unmatched password";
     }
 }
+
+module.exports = exportedMethods;
