@@ -14,8 +14,10 @@ let exportedMethods = {
             if (username = users[i].username && await bcrypt.compare(password, users[i].hashedPassword));
             return users[i];
         }
-        throw "Invalid username or unmatched password";
+        return false;
     }
 }
+
+exportedMethods.getUser(masterdetective123, elementarymydearwatson);
 
 module.exports = exportedMethods;
